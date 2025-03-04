@@ -1,0 +1,41 @@
+name: Build Godot Project
+
+on:
+  push:
+#    paths:
+#      - 'projects/monstrous/buildTrigger.txt'
+
+jobs:
+  export_game:
+    runs-on: ubuntu-latest
+    permissions: write-all
+    name: Export Game Job
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+#      - name: install wine
+#        id: wine_install
+#        run: |
+#          sudo apt install wine64
+#          echo "WINE_PATH=$(which wine64)" >> $GITHUB_OUTPUT
+#      - name: use custom editor settings
+#        run: |
+#          mkdir -p ~/.config/godot
+#          cp ~/path/to/my/editor_settings-3.tres ~/.config/godot/
+      - name: export game
+        id: export
+        uses: surfpossum/godot-export@master
+        with:
+          godot_executable_download_url: https://github.com/godotengine/godot/releases/download/4.3-stable/Godot_v4.3-stable_linux.x86_64.zip
+          godot_export_templates_download_url: https://github.com/godotengine/godot/releases/download/4.3-stable/Godot_v4.3-stable_export_templates.tpz
+          relative_project_path: ./ # build the standard project
+          relative_export_path: ./ # move export output to this directory relative to git root
+          cache: true
+          verbose: true
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: test
+          path: /
+#/home/runner/work/surfpossum.github.io/surfpossum.github.io/projects/monstrous/project.godot
+#/home/runner/work/godot-export/godot-export/examples/project-godot-4/project.godot
